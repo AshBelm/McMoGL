@@ -1,0 +1,40 @@
+uniform mat4 uMVPMatrix;
+uniform vec4 aColor;
+uniform vec4 aLoadingColor;
+uniform float aLoadingDegree;//1-360
+uniform float aRadiusFactor;
+attribute vec3 aPosition;
+varying vec4 vColor;
+void main()
+{
+    gl_Position = uMVPMatrix * vec4(aPosition.x*aRadiusFactor,aPosition.y*aRadiusFactor,aPosition.z,1);
+    float rad = 0.0;
+    float deg = 0.0;
+    if(aPosition.y == 0.0){
+        if(aPosition.x>0.0){
+          deg = 270.0;
+        }else{
+          deg = 90.0;
+        }
+    }else{
+        if(aPosition.x<0.0){
+            if(aPosition.y>0.0){
+                rad = atan(-aPosition.x/aPosition.y);
+            }else{
+                rad = atan(aPosition.y/aPosition.x)+1.5707963;
+            }
+        }else{
+            if(aPosition.y>0.0){
+                rad = atan(aPosition.y/aPosition.x)+4.7123889;
+            }else{
+                rad = atan(-aPosition.x/aPosition.y)+3.1415926;
+            }
+        }
+        deg = degrees(rad);
+    }
+    if(deg<aLoadingDegree){
+        vColor = aLoadingColor;
+    }else{
+        vColor = aColor;
+    }
+}

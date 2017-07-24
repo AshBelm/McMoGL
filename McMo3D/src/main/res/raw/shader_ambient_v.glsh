@@ -1,0 +1,11 @@
+uniform mat4 uMVPMatrix;
+attribute vec3 aPosition;
+attribute vec2 aTexCoor;
+varying vec2 vTextureCoor;
+varying vec4 vAmbient;//环境光
+void main()
+{
+    gl_Position = uMVPMatrix * vec4(aPosition,1);
+    vTextureCoor = aTexCoor;
+    vAmbient = vec4(0.25,0.25,0.25,1);
+}

@@ -1,0 +1,16 @@
+precision mediump float;
+varying vec2 vTextureCoor;
+uniform sampler2D sTextureOne;
+uniform sampler2D sTextureTwo;
+varying float factor;
+void main()
+{
+
+    if(factor>=1.0){
+        gl_FragColor = texture2D(sTextureTwo,vTextureCoor);
+    }else if(factor<=0.0){
+        gl_FragColor = texture2D(sTextureOne,vTextureCoor);
+    }else{
+        gl_FragColor = factor * texture2D(sTextureTwo,vTextureCoor) + (1.0-factor) * texture2D(sTextureOne,vTextureCoor);
+    }
+}

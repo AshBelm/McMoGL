@@ -1,0 +1,16 @@
+uniform mat4 uMVPMatrix;
+uniform vec2 uWHParam;
+uniform float uFrameIndex;
+attribute vec3 aPosition;
+attribute vec2 aTexCoor;
+varying vec2 vTextureCoor;
+void main()
+{
+    gl_Position = uMVPMatrix * vec4(aPosition,1);
+    float yIndex = floor(uFrameIndex / uWHParam.x);
+    float xIndex = uFrameIndex - (uWHParam.x * yIndex);
+    float startX = 1.0/uWHParam.x*xIndex;
+    float startY = 1.0/uWHParam.y*yIndex;
+    vTextureCoor = aTexCoor / uWHParam + vec2(startX,startY);
+
+}
