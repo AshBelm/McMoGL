@@ -25,6 +25,7 @@ public class GlRender implements IRender {
     private int mSurfaceWidth,mSurfaceHeight;
     protected ISurface mSurface;
     private Scene mCurScene;
+    private GlSettings mGlSettings;
     //帧数
     private ScheduledExecutorService mTimer;
     private int mFrameRate = 30;
@@ -42,6 +43,14 @@ public class GlRender implements IRender {
 
     public void setISurface(ISurface surface) {
         this.mSurface = surface;
+    }
+
+    public GlSettings getGlSettings() {
+        return mGlSettings;
+    }
+
+    public void setGlSettings(GlSettings glSettings) {
+        this.mGlSettings = glSettings;
     }
 
     public void setCurrentScene(Scene scene) {
@@ -98,10 +107,11 @@ public class GlRender implements IRender {
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         DebugUtil.logDebug("GLRender","life cycle","render created");
 
-        GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        GLES20.glClearColor(mGlSettings.clearColorRead, mGlSettings.clearColorGreen, mGlSettings.clearColorBlue, mGlSettings.clearColorAlpha);
 //        GLES20.glEnable(GLES20.GL_DEPTH_TEST);
         GLES20.glEnable(GLES20.GL_CULL_FACE);
         if (mCurScene != null) {
+            mCurScene.onPreCreate(context);
             mCurScene.onCreate(context);
             mCurScene.onPostCreate(context);
         }

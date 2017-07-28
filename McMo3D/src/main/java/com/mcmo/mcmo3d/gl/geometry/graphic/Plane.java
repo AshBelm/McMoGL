@@ -14,7 +14,7 @@ public class Plane extends Object3D{
     private Axis mOrientation;
     private float width=1.0f;
     private float height=1.0f;
-    public Plane(Context context,Axis axis, float width, float height) {
+    public Plane(Axis axis, float width, float height) {
         mOrientation=axis;
         this.width=width;
         this.height=height;

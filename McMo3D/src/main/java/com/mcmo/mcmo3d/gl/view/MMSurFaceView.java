@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
 import com.mcmo.mcmo3d.gl.render.GlRender;
+import com.mcmo.mcmo3d.gl.render.GlSettings;
 import com.mcmo.mcmo3d.gl.render.Scene;
 import com.mcmo.mcmo3d.gl.util.DebugUtil;
 
@@ -54,7 +55,7 @@ public class MMSurFaceView extends GLSurfaceView implements ISurface {
         setRenderer(mRenderDelegate);
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
     }
-
+    public void onSettings(GlSettings settings){}
     public void setFrameRate(int rate){
         mRenderDelegate.render.setFrameRate(rate);
     }
@@ -142,6 +143,10 @@ public class MMSurFaceView extends GLSurfaceView implements ISurface {
         public RenderDelegate(Context context) {
             render=new GlRender(context);
             render.setISurface(MMSurFaceView.this);
+            GlSettings settings = new GlSettings();
+            onSettings(settings);
+            settings.analysis();
+            render.setGlSettings(settings);
         }
 
         @Override

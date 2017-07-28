@@ -12,9 +12,14 @@ import java.util.ArrayList;
 public class Sphere extends Object3D {
     private int vCount;
     private float r;
-    private final float angleSpan=6.0f;
-    public Sphere(Context context,float r) {
+    private float angleSpan=6.0f;
+    public Sphere(float r) {
         this.r=r;
+    }
+
+    public Sphere(float r, float angleSpan) {
+        this.r = r;
+        this.angleSpan = angleSpan;
     }
 
     @Override

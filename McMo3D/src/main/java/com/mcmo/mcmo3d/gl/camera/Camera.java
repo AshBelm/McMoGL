@@ -6,6 +6,7 @@ import com.mcmo.mcmo3d.gl.geometry.graphic.GLObject;
 import com.mcmo.mcmo3d.gl.geometry.graphic.Object3D;
 import com.mcmo.mcmo3d.gl.geometry.graphic.prefab.Prefab;
 import com.mcmo.mcmo3d.gl.math.matrix.Matrix4;
+import com.mcmo.mcmo3d.gl.util.McMoGLConstant;
 
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 
 public class Camera extends GLObject{
+    private boolean enable = true;
     protected float[] mMVPMatrix;
     private Matrix4 mProjMatrix;
     private Matrix4 mVMatrix;
@@ -23,20 +25,23 @@ public class Camera extends GLObject{
     protected float width,height;//屏幕尺寸像素
     protected float left,right,top,bottom,near,far;
 
-    private HashSet<String> drawTags;
+    private HashSet<String> drawLayers;
 
     public Camera() {
         this.mMVPMatrix=new float[16];
         this.mProjMatrix = new Matrix4();
         this.mVMatrix = new Matrix4();
-        drawTags=new HashSet<>();
-        addTag("default");
+        drawLayers =new HashSet<>();
+        addRenderLayer(McMoGLConstant.LAYER_DEFAULT);
     }
-    public void addTag(String tag){
-        drawTags.add(tag);
+    public void addRenderLayer(String layer){
+        drawLayers.add(layer);
     }
-    public boolean removeTag(String tag){
-        return drawTags.remove(tag);
+    public boolean removeRenderLayer(String layer){
+        return drawLayers.remove(layer);
+    }
+    public void clearRenderLayer(){
+        drawLayers.clear();
     }
     public void setFOV(float mFOV) {
         this.mFOV = mFOV;
@@ -49,6 +54,14 @@ public class Camera extends GLObject{
 //            right=top*mAspect;
 //            left=-right;
 //        }
+    }
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
     }
 
     public float getFOV() {
@@ -90,11 +103,12 @@ public class Camera extends GLObject{
     public float[] getMVPMatrix() {
         return mMVPMatrix;
     }
-
+    private boolean needDraw(GLObject obj){
+        return drawLayers.contains(obj.getLayer());
+    }
     public void draw(List<GLObject> models){
-
         for (GLObject o:models) {
-            if(!drawTags.contains(o.getTag())){
+            if(!needDraw(o)){
                 continue;
             }
             if(o instanceof Object3D){
@@ -105,18 +119,22 @@ public class Camera extends GLObject{
         }
     }
     public void drawOneObject(GLObject glObject){
-        if(glObject instanceof Object3D){
-            ((Object3D) glObject).draw(calcMVPMatrix(glObject.getFinalModelArray()));
-        }else if(glObject instanceof Prefab){
-            draw((Prefab)glObject);
+        if(needDraw(glObject)){
+            if(glObject instanceof Object3D){
+                ((Object3D) glObject).draw(calcMVPMatrix(glObject.getFinalModelArray()));
+            }else if(glObject instanceof Prefab){
+                draw((Prefab)glObject);
+            }
         }
     }
     public void draw(Prefab prefab){
-        for (GLObject object:prefab.childs()) {
-            if(object instanceof Object3D){
-                ((Object3D) object).draw(calcMVPMatrix(object.getFinalModelArray()));
-            }else if(object instanceof Prefab){
-                draw((Prefab) object);
+        if(needDraw(prefab)){
+            for (GLObject object:prefab.childs()) {
+                if(object instanceof Object3D){
+                    ((Object3D) object).draw(calcMVPMatrix(object.getFinalModelArray()));
+                }else if(object instanceof Prefab){
+                    draw((Prefab) object);
+                }
             }
         }
     }

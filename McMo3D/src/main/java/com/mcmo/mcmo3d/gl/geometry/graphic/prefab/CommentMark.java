@@ -28,7 +28,7 @@ public class CommentMark extends Prefab {
 
     private void init(Context context, String text, UnlightTextureShader shader) {
         text2D= new Text2D(context,text,80,0x5500f00f,10,0,0,0);
-        mAvatar=new Plane(context, Axis.Z,text2D.getHeight(),text2D.getHeight());
+        mAvatar=new Plane(Axis.Z,text2D.getHeight(),text2D.getHeight());
         line=new Line(Vector3.ZERO(),new Vector3(0,3,0));
         Material mLine=new Material();
         UnlightColorShader sLine=new UnlightColorShader(context.getResources());

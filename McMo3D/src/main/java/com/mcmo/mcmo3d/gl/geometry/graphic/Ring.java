@@ -89,17 +89,6 @@ public class Ring extends Object3D {
     }
 
     @Override
-    public float[] getFinalModelArray() {
-        if (mParent != null) {
-            transform.tmpMatrix.multiplyMM(mParent.getFinalModelMatrix(), transform.mModelMatrix);
-            return transform.tmpMatrix.getM();
-        } else {
-            transform.tmpMatrix.copyFrom(transform.mModelMatrix);
-            return transform.tmpMatrix.getM();
-        }
-    }
-
-    @Override
     protected float[] buildTextureArray() {
         return new float[0];
     }

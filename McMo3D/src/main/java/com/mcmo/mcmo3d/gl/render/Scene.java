@@ -10,6 +10,7 @@ import com.mcmo.mcmo3d.gl.material.MaterialManager;
 import com.mcmo.mcmo3d.gl.util.DebugUtil;
 import com.mcmo.mcmo3d.gl.util.GLTask;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +23,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public abstract class Scene {
 
     private List<GLObject> models = Collections.synchronizedList(new CopyOnWriteArrayList<GLObject>());
-    private Camera mMainCamera;
+    private Camera mMainCamera;//场景主相机
+    private List<Camera> mCameras;//其他相机
     private boolean created = false;
     private LinkedList<GLTask> mGLTasks = new LinkedList<>();
     protected GlRender mRender;
@@ -43,6 +45,8 @@ public abstract class Scene {
         return models;
     }
 
+    protected void onPreCreate(Context context){
+    }
     public abstract void onCreate(Context context);
     protected void onPostCreate(Context context) {
         DebugUtil.logDebug("Scene","life cycle","Scene Created");
@@ -58,8 +62,17 @@ public abstract class Scene {
         for (GLObject o:models){
             o.onFrameUpdate(settingRate);
         }
-        mMainCamera.onFrameUpdate(settingRate);
-        mMainCamera.draw(models);
+        // TODO: 2017/7/28 是否要给相机一个顺序的设置？还是依照物体的z顺序再去相应的相机来画 
+        if(mMainCamera!=null&&mMainCamera.isEnable()){
+            mMainCamera.onFrameUpdate(settingRate);
+            mMainCamera.draw(models);
+        }
+        if(mCameras!=null){
+            for (Camera camera:mCameras) {
+                camera.onFrameUpdate(settingRate);
+                camera.draw(models);
+            }
+        }
     }
 
     public void onDestroy(){
@@ -79,8 +92,22 @@ public abstract class Scene {
     public void addToScene(GLObject object) {
         addGLObject(object);
     }
-
-    public void addCamera(final Camera camera) {
+    public void addCamera(final Camera camera){
+        if(mCameras==null){
+            mCameras = new ArrayList<>();
+        }
+        if(!mCameras.contains(camera)){
+            mCameras.add(camera);
+        }
+        GLTask task = new GLTask() {
+            @Override
+            public void execute() {
+                camera.create(getContext());
+            }
+        };
+        offerTask(task);
+    }
+    public void setMainCamera(final Camera camera) {
         mMainCamera = camera;
         GLTask task=new GLTask() {
             @Override
@@ -118,7 +145,7 @@ public abstract class Scene {
             mGLTasks.offer(task);
         }
     }
-    protected void addGLObject(final GLObject object){
+    private void addGLObject(final GLObject object){
         final GLTask task=new GLTask() {
             @Override
             public void execute() {
@@ -128,7 +155,10 @@ public abstract class Scene {
         };
         offerTask(task);
     }
-    protected boolean removeObject(int id){
+    public boolean removeFromScene(int id){
+        return removeObject(id);
+    }
+    private boolean removeObject(int id){
         for (int i = 0; i < models.size(); i++) {
             if(models.get(i).getId()==id){
                 GLObject object=models.remove(i);
@@ -138,7 +168,10 @@ public abstract class Scene {
         }
         return false;
     }
-    protected boolean removeObject(GLObject object){
+    public boolean removeFromScene(GLObject object){
+        return removeObject(object);
+    }
+    private boolean removeObject(GLObject object){
         if(models.contains(object)){
             models.remove(object);
             object.destroy(getContext());

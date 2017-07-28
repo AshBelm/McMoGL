@@ -24,6 +24,7 @@ public class VideoShader extends AShader {
     private int mTextureId;
 
     private Callback mCallback;
+    private CallbackTexture mCallbackTexture;
 
     public VideoShader(Resources resources) {
         super(R.raw.shader_unlit_v, R.raw.shader_video_f, resources);
@@ -32,6 +33,10 @@ public class VideoShader extends AShader {
 
     public void setCallback(Callback mCallback) {
         this.mCallback = mCallback;
+    }
+
+    public void setCallbackTexture(CallbackTexture callbackTexture) {
+        this.mCallbackTexture = callbackTexture;
     }
 
     @Override
@@ -46,9 +51,14 @@ public class VideoShader extends AShader {
         GLES20.glTexParameterf(GL_TEXTURE_EXTERNAL_OES, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);//设置T轴拉伸方式
         mTextureId=textureId[0];
         surfaceTexture=new SurfaceTexture(mTextureId);
-        surface=new Surface(surfaceTexture);
-        if(mCallback!=null)
-            mCallback.onSurfaceCreate(surface);
+        // TODO: 2017/7/26 这个地方的实现可能有问题
+        if(mCallbackTexture!=null){
+            mCallbackTexture.onSurfaceCreate(surfaceTexture);
+        }else{
+            surface=new Surface(surfaceTexture);
+            if(mCallback!=null)
+                mCallback.onSurfaceCreate(surface);
+        }
     }
     private Surface surface;
 
@@ -98,5 +108,8 @@ public class VideoShader extends AShader {
     }
     public interface Callback{
         public void onSurfaceCreate(Surface surface);
+    }
+    public interface CallbackTexture{
+        public void onSurfaceCreate(SurfaceTexture surfaceTexture);
     }
 }

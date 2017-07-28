@@ -13,7 +13,7 @@ import com.mcmo.mcmo3d.gl.math.Axis;
 public class ScreenPlane extends Plane {
     private ScreenCamera camera;
     public ScreenPlane(Context context) {
-        super(context, Axis.Z, 2, 2);
+        super(Axis.Z, 2, 2);
         camera=new ScreenCamera();
         camera.setLookAt(0,0,0,0,0,1,0,1,0);
         camera.orthoM(-1,1,-1,1,1,10);

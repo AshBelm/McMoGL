@@ -69,7 +69,7 @@ public class Text2D extends Prefab{
         mWidth=width*GRAPH_SCALE;
         mHeight=height*GRAPH_SCALE;
 
-        planeText=new Plane(context ,Axis.Z,mWidth,mHeight);
+        planeText=new Plane(Axis.Z,mWidth,mHeight);
         planeText.setMaterial(tMaterial);
         planeText.setTransparent(true);
 

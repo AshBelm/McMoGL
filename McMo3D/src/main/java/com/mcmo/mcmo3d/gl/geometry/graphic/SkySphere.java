@@ -3,12 +3,13 @@ package com.mcmo.mcmo3d.gl.geometry.graphic;
 import android.content.Context;
 
 /**
+ * 用于实现天空宇的球形,也可以用来开发VR全景视频和图片
  * Created by ZhangWei on 2017/3/8.
  */
 
-public class VRSphere extends Sphere {
-    public VRSphere(Context context, float r) {
-        super(context, r);
+public class SkySphere extends Sphere {
+    public SkySphere( float r) {
+        super(r);
     }
 
     @Override

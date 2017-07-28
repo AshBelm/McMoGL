@@ -8,6 +8,7 @@ import com.mcmo.mcmo3d.gl.math.Transform3D;
 import com.mcmo.mcmo3d.gl.math.matrix.Matrix4;
 import com.mcmo.mcmo3d.gl.math.vector.Vector3;
 import com.mcmo.mcmo3d.gl.physics.collision.Collider;
+import com.mcmo.mcmo3d.gl.util.McMoGLConstant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,7 +18,7 @@ import java.util.HashMap;
  */
 
 public class GLObject implements FrameUpdate {
-    private String tag="default";
+    private String layer = McMoGLConstant.LAYER_DEFAULT;
     private int id;
     public Transform3D transform;
     public GLObject mParent;
@@ -31,12 +32,12 @@ public class GLObject implements FrameUpdate {
         transform = new Transform3D();
     }
 
-    public String getTag() {
-        return tag;
+    public String getLayer() {
+        return layer;
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
+    public void setLayer(String layer) {
+        this.layer = layer;
     }
 
     public int getId() {
