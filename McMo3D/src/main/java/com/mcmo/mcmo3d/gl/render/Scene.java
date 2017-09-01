@@ -62,7 +62,7 @@ public abstract class Scene {
         for (GLObject o:models){
             o.onFrameUpdate(settingRate);
         }
-        // TODO: 2017/7/28 是否要给相机一个顺序的设置？还是依照物体的z顺序再去相应的相机来画 
+        // TODO: 2017/7/28 是否要给相机一个顺序的设置？还是依照物体的z顺序再去相应的相机来画
         if(mMainCamera!=null&&mMainCamera.isEnable()){
             mMainCamera.onFrameUpdate(settingRate);
             mMainCamera.draw(models);

@@ -107,7 +107,7 @@ public class GlRender implements IRender {
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         DebugUtil.logDebug("GLRender","life cycle","render created");
 
-        GLES20.glClearColor(mGlSettings.clearColorRead, mGlSettings.clearColorGreen, mGlSettings.clearColorBlue, mGlSettings.clearColorAlpha);
+        GLES20.glClearColor(mGlSettings.clearColorRed, mGlSettings.clearColorGreen, mGlSettings.clearColorBlue, mGlSettings.clearColorAlpha);
 //        GLES20.glEnable(GLES20.GL_DEPTH_TEST);
         GLES20.glEnable(GLES20.GL_CULL_FACE);
         if (mCurScene != null) {
